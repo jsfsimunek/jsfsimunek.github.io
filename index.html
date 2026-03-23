@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>qb coffee roasters — Brno</title>
+<meta name="description" content="Pražíme, vaříme, rozumíme. Ve starých loděnicích u řeky Svratky v Brně-Jundrov.">
+<meta property="og:title" content="qb coffee roasters">
+<meta property="og:description" content="Pražíme, vaříme, rozumíme. Ve starých loděnicích u řeky Svratky v Brně-Jundrov.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --dark: #0E0D09;
+    --brown: #3D2B1A;
+    --rust: #8B4A2A;
+    --sage: #6B7A5E;
+    --stone: #6B6050;
+    --warm-white: #FAF6EF;
+    --transition: 2s ease;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  body.night  { background: #0E0D09; color: var(--cream); }
+  body.dawn   { background: #1A1208; color: var(--cream); }
+  body.day    { background: #F7F3EA; color: #1C1A14; }
+  body.dusk   { background: #1C1008; color: var(--cream); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    transition: background var(--transition), border-color var(--transition);
+  }
+  body.night nav, body.dawn nav, body.dusk nav {
+    background: rgba(14,13,9,0.8);
+    border-bottom: 0.5px solid #2a2720;
+    backdrop-filter: blur(8px);
+  }
+  body.day nav {
+    background: rgba(247,243,234,0.85);
+    border-bottom: 0.5px solid #D8D0C0;
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  body.night .nav-logo, body.dawn .nav-logo, body.dusk .nav-logo { color: var(--cream); }
+  body.day .nav-logo { color: #1C1A14; }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  body.night .nav-links a, body.dawn .nav-links a, body.dusk .nav-links a { color: var(--stone); }
+  body.day .nav-links a { color: #9B8B70; }
+  .nav-links a:hover { color: var(--rust); }
+
+  .time-toggle {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    transition: all var(--transition);
+    font-family: 'DM Mono', monospace;
+  }
+  body.night .time-toggle  { background: #1C1A14; color: var(--stone); border: 0.5px solid #2a2720; }
+  body.dawn .time-toggle   { background: #2A1A0A; color: #C88040; border: 0.5px solid #3a2a10; }
+  body.day .time-toggle    { background: #EDE8DA; color: #7B6040; border: 0.5px solid #C8BCA0; }
+  body.dusk .time-toggle   { background: #2A1408; color: #D06030; border: 0.5px solid #4a2a10; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #heroCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    transition: color var(--transition);
+  }
+  body.night .eyebrow, body.dawn .eyebrow, body.dusk .eyebrow { color: var(--stone); }
+  body.day .eyebrow { color: #9B8B70; }
+
+  .logo-main {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(80px, 15vw, 120px);
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 6px;
+    transition: color var(--transition);
+  }
+  body.night .logo-main, body.dawn .logo-main, body.dusk .logo-main { color: var(--cream); }
+  body.day .logo-main { color: #1C1A14; }
+
+  .logo-sub {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-bottom: 44px;
+    transition: color var(--transition);
+  }
+  body.night .logo-sub, body.dawn .logo-sub, body.dusk .logo-sub { color: var(--stone); }
+  body.day .logo-sub { color: #9B8B70; }
+
+  .tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    max-width: 380px;
+    line-height: 1.75;
+    margin: 0 auto 48px;
+    transition: color var(--transition);
+  }
+  body.night .tagline, body.dawn .tagline, body.dusk .tagline { color: #9B9188; }
+  body.day .tagline { color: #6B5A40; }
+
+  .hero-cta {
+    display: inline-flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 2px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--rust);
+    color: var(--cream);
+    border: 1px solid var(--rust);
+  }
+  .btn-primary:hover { background: #9B5A3A; }
+  .btn-ghost {
+    background: transparent;
+    border: 0.5px solid currentColor;
+    transition: all 0.3s;
+  }
+  body.night .btn-ghost, body.dawn .btn-ghost, body.dusk .btn-ghost { color: #9B9188; }
+  body.day .btn-ghost { color: #7B6A50; }
+  .btn-ghost:hover { border-color: var(--rust); color: var(--rust); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  .scroll-hint span {
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    transition: color var(--transition);
+  }
+  body.night .scroll-hint span, body.dawn .scroll-hint span, body.dusk .scroll-hint span { color: #3a3528; }
+  body.day .scroll-hint span { color: #B8A890; }
+  .scroll-hint svg { opacity: 0.3; }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  /* ── SECTIONS ── */
+  section { padding: 96px 40px; }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  body.night .section-label, body.dawn .section-label, body.dusk .section-label {
+    color: var(--stone);
+    border-bottom: 0.5px solid #2a2720;
+  }
+  body.day .section-label {
+    color: #9B8B70;
+    border-bottom: 0.5px solid #D8D0C0;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 64px;
+    align-items: start;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .about-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 2.5vw, 26px);
+    font-weight: 400;
+    line-height: 1.6;
+    transition: color var(--transition);
+  }
+  body.night .about-text, body.dawn .about-text, body.dusk .about-text { color: var(--cream); }
+  body.day .about-text { color: #1C1A14; }
+  .about-text em { font-style: italic; }
+  body.night .about-text em, body.dawn .about-text em, body.dusk .about-text em { color: #9B9188; }
+  body.day .about-text em { color: #9B8B70; }
+
+  .facts { display: flex; flex-direction: column; gap: 28px; }
+  .fact { border-left: 1px solid var(--rust); padding-left: 20px; }
+  .fact-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 6px;
+    transition: color var(--transition);
+  }
+  body.night .fact-num, body.dawn .fact-num, body.dusk .fact-num { color: var(--cream); }
+  body.day .fact-num { color: #1C1A14; }
+  .fact-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; transition: color var(--transition); }
+  body.night .fact-label, body.dawn .fact-label, body.dusk .fact-label { color: var(--stone); }
+  body.day .fact-label { color: #9B8B70; }
+
+  /* ── CUP INTERLUDE ── */
+  .cup-scene {
+    padding: 96px 40px;
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    transition: background var(--transition);
+    max-width: 100%;
+  }
+  body.night .cup-scene, body.dawn .cup-scene, body.dusk .cup-scene { background: #18160F; }
+  body.day .cup-scene { background: #EDE8DA; }
+
+  .cup-wrap { flex-shrink: 0; }
+
+  .cup-copy { flex: 1; max-width: 400px; }
+  .cup-copy h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 400;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    transition: color var(--transition);
+  }
+  body.night .cup-copy h2, body.dawn .cup-copy h2, body.dusk .cup-copy h2 { color: var(--cream); }
+  body.day .cup-copy h2 { color: #1C1A14; }
+  .cup-copy p { font-size: 12px; line-height: 2; transition: color var(--transition); }
+  body.night .cup-copy p, body.dawn .cup-copy p, body.dusk .cup-copy p { color: var(--stone); }
+  body.day .cup-copy p { color: #7B6A50; }
+
+  /* ── COFFEES ── */
+  .coffees {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    max-width: 1100px;
+    margin: 0 auto;
+    transition: background var(--transition);
+  }
+  body.night .coffees, body.dawn .coffees, body.dusk .coffees { background: #2a2720; }
+  body.day .coffees { background: #D8D0C0; }
+
+  .coffee-card {
+    padding: 36px 28px;
+    cursor: default;
+    transition: background 0.3s;
+  }
+  body.night .coffee-card, body.dawn .coffee-card, body.dusk .coffee-card { background: #1C1A14; }
+  body.day .coffee-card { background: #F7F3EA; }
+  body.night .coffee-card:hover, body.dawn .coffee-card:hover, body.dusk .coffee-card:hover { background: #232118; }
+  body.day .coffee-card:hover { background: #EDE8DA; }
+
+  .coffee-origin { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--rust); margin-bottom: 12px; }
+  .coffee-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 14px;
+    line-height: 1.2;
+    transition: color var(--transition);
+  }
+  body.night .coffee-name, body.dawn .coffee-name, body.dusk .coffee-name { color: var(--cream); }
+  body.day .coffee-name { color: #1C1A14; }
+  .coffee-notes { font-size: 11px; line-height: 1.7; transition: color var(--transition); }
+  body.night .coffee-notes, body.dawn .coffee-notes, body.dusk .coffee-notes { color: var(--stone); }
+  body.day .coffee-notes { color: #7B6A50; }
+  .coffee-process {
+    margin-top: 20px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding-top: 14px;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  body.night .coffee-process, body.dawn .coffee-process, body.dusk .coffee-process { color: #3a3528; border-top: 0.5px solid #2a2720; }
+  body.day .coffee-process { color: #B8A890; border-top: 0.5px solid #D8D0C0; }
+
+  /* ── VISIT ── */
+  .visit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .visit-info p { font-size: 12px; line-height: 2.2; transition: color var(--transition); }
+  body.night .visit-info p, body.dawn .visit-info p, body.dusk .visit-info p { color: var(--stone); }
+  body.day .visit-info p { color: #7B6A50; }
+  .visit-info a { text-decoration: none; transition: color 0.3s; }
+  body.night .visit-info a, body.dawn .visit-info a, body.dusk .visit-info a { color: var(--cream); }
+  body.day .visit-info a { color: #1C1A14; }
+  .visit-info a:hover { color: var(--rust); }
+
+  .visit-map {
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color var(--transition);
+  }
+  body.night .visit-map, body.dawn .visit-map, body.dusk .visit-map { border: 0.5px solid #2a2720; }
+  body.day .visit-map { border: 0.5px solid #D8D0C0; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    transition: border-color var(--transition);
+  }
+  body.night footer, body.dawn footer, body.dusk footer { border-top: 0.5px solid #2a2720; }
+  body.day footer { border-top: 0.5px solid #D8D0C0; }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    transition: color var(--transition);
+  }
+  body.night footer, body.dawn footer, body.dusk footer { color: var(--stone); }
+  body.day .footer-logo { color: #9B8B70; }
+
+  .footer-copy { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; transition: color var(--transition); }
+  body.night .footer-copy, body.dawn .footer-copy, body.dusk .footer-copy { color: #3a3528; }
+  body.day .footer-copy { color: #C8BCA0; }
+
+  /* ── REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    section { padding: 64px 20px; }
+    .about-grid, .visit-grid { grid-template-columns: 1fr; gap: 40px; }
+    .coffees { grid-template-columns: 1fr; }
+    .cup-scene { flex-direction: column; padding: 64px 20px; gap: 40px; }
+    footer { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body class="night">
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">qb</a>
+  <ul class="nav-links">
+    <li><a href="#o-nas">o nás</a></li>
+    <li><a href="#nabidka">nabídka</a></li>
+    <li><a href="#navstivte">navštivte</a></li>
+  </ul>
+  <button class="time-toggle" id="timeToggle">noc</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <p class="eyebrow">Brno — Jundrov — u Svratky</p>
+    <h1 class="logo-main">qb</h1>
+    <p class="logo-sub">coffee roasters</p>
+    <p class="tagline">Pražíme, vaříme, rozumíme. Ve starých loděnicích u řeky, kde káva smrdí jak to má být.</p>
+    <div class="hero-cta">
+      <a href="#nabidka" class="btn btn-primary">aktuální kávy</a>
+      <a href="#navstivte" class="btn btn-ghost">kde nás najdete</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 1v14M1 10l5 5 5-5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="o-nas">
+  <div class="about-grid">
+    <div class="reveal">
+      <p class="section-label">o nás</p>
+      <p class="about-text">Začalo to ve stodole, <em>čtyřkilovým pražičem</em> a kamarádem, který dřív pracoval na Mattoni. Skončilo to pražírnou přímo tam, kde ji zákazník může vidět, přičichnout, sáhnout si na 60kg pytel zelené a zeptat se na cokoliv.</p>
+    </div>
+    <div class="facts reveal reveal-delay-1">
+      <div class="fact"><div class="fact-num">80+</div><div class="fact-label">kaváren, kterým pražíme</div></div>
+      <div class="fact"><div class="fact-num">1</div><div class="fact-label">místo u řeky</div></div>
+      <div class="fact"><div class="fact-num">∞</div><div class="fact-label">cuppingů</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CUP INTERLUDE -->
+<div class="cup-scene">
+  <div class="cup-wrap reveal">
+    <svg width="180" height="220" viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+      <g id="steam1" style="transform-origin:55px 30px">
+        <path d="M55 55 Q50 40 55 25 Q60 10 55 0" fill="none" stroke="#3A3020" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+      <g id="steam2" style="transform-origin:80px 25px">
+        <path d="M80 50 Q75 33 80 18 Q85 3 80 -8" fill="none" stroke="#3A3020" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+      <g id="steam3" style="transform-origin:105px 30px">
+        <path d="M105 55 Q110 38 105 23 Q100 8 105 -2" fill="none" stroke="#3A3020" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+      <ellipse cx="80" cy="165" rx="60" ry="12" fill="#241E12"/>
+      <ellipse cx="80" cy="162" rx="55" ry="10" fill="#2A2416"/>
+      <ellipse cx="80" cy="160" rx="52" ry="9" fill="#221C10"/>
+      <path d="M35 100 Q30 155 80 158 Q130 155 125 100 Z" fill="#2A2416"/>
+      <path d="M35 100 Q80 108 125 100" fill="none" stroke="#301E10" stroke-width="1"/>
+      <ellipse cx="80" cy="100" rx="45" ry="10" fill="#301E10"/>
+      <ellipse cx="80" cy="98" rx="43" ry="9" fill="#35220E"/>
+      <ellipse cx="80" cy="100" rx="40" ry="8" fill="#3D2808"/>
+      <path d="M80 96 Q72 100 80 108 Q88 100 80 96 Z" fill="#4A3010" opacity="0.6"/>
+      <line x1="80" y1="96" x2="80" y2="108" stroke="#4A3010" stroke-width="0.5" opacity="0.5"/>
+      <path d="M74 101 Q80 99 86 101" fill="none" stroke="#4A3010" stroke-width="0.5" opacity="0.4"/>
+      <path d="M75 103 Q80 101 85 103" fill="none" stroke="#4A3010" stroke-width="0.5" opacity="0.3"/>
+      <path d="M125 110 Q150 115 148 135 Q146 155 125 150" fill="none" stroke="#2A2416" stroke-width="8" stroke-linecap="round"/>
+      <path d="M125 110 Q147 115 145 135 Q143 152 125 150" fill="none" stroke="#301E10" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="cup-copy reveal reveal-delay-1">
+    <h2>Věříme v kávový holismus.</h2>
+    <p>Od zeleného zrna po šálek. Pražíme sami, vaříme sami, sami si neseme zodpovědnost za každý gram. Cuppingové sessions pro každého, kdo chce rozumět víc než jen "dobrý, dám si další".</p>
+  </div>
+</div>
+
+<!-- COFFEES -->
+<section id="nabidka">
+  <div style="max-width:1100px;margin:0 auto">
+    <p class="section-label reveal">aktuální nabídka</p>
+    <div class="coffees">
+      <div class="coffee-card reveal">
+        <p class="coffee-origin">Rwanda</p>
+        <p class="coffee-name">Nyamasheke</p>
+        <p class="coffee-notes">Červený rybíz, bílé hrozny, jemná kyselost. Naturál, sluneční sušení na africké náhorní plošině.</p>
+        <p class="coffee-process">Natural · 1800 m.n.m.</p>
+      </div>
+      <div class="coffee-card reveal reveal-delay-1">
+        <p class="coffee-origin">Etiopie</p>
+        <p class="coffee-name">Yirgacheffe</p>
+        <p class="coffee-notes">Květ jasmínu, bergamot, citronová kůra. Klasika, která nikdy nepřestane fascinovat.</p>
+        <p class="coffee-process">Washed · Grade 1 · 2000 m.n.m.</p>
+      </div>
+      <div class="coffee-card reveal reveal-delay-2">
+        <p class="coffee-origin">Kolumbie</p>
+        <p class="coffee-name">El Paraíso</p>
+        <p class="coffee-notes">Mléčná čokoláda, karamel, vlašský ořech. Přímočará káva, žádné přesvědčování.</p>
+        <p class="coffee-process">Honey · 1600 m.n.m.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section id="navstivte">
+  <div class="visit-grid">
+    <div class="visit-info reveal">
+      <p class="section-label">přijďte</p>
+      <p>
+        Veslařská 507/179<br>
+        Brno-Jundrov<br>
+        <br>
+        Po–Pá &nbsp;8:00–18:00<br>
+        So–Ne &nbsp;9:00–17:00<br>
+        <br>
+        <a href="tel:+420725307597">+420 725 307 597</a><br>
+        <a href="mailto:info@qb.coffee">info@qb.coffee</a>
+      </p>
+    </div>
+    <div class="visit-map reveal reveal-delay-1">
+      <svg width="100%" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+        <rect width="320" height="220" fill="#18160F"/>
+        <path d="M0 135 Q80 122 160 132 Q240 142 320 128" fill="none" stroke="#2A2820" stroke-width="16"/>
+        <path d="M0 135 Q80 122 160 132 Q240 142 320 128" fill="none" stroke="#1E1C14" stroke-width="12"/>
+        <text x="70" y="130" fill="#3A3528" font-size="7" font-family="monospace" letter-spacing="2">SVRATKA</text>
+        <path d="M0 112 Q80 103 160 110 Q240 117 320 106" fill="none" stroke="#222018" stroke-width="2" stroke-dasharray="8 5"/>
+        <line x1="160" y1="0" x2="160" y2="220" stroke="#201E16" stroke-width="4"/>
+        <line x1="0" y1="90" x2="320" y2="90" stroke="#201E16" stroke-width="2.5"/>
+        <text x="166" y="58" fill="#3A3528" font-size="8" font-family="monospace">Veslařská</text>
+        <text x="166" y="160" fill="#2A2820" font-size="7" font-family="monospace">cyklostezka</text>
+        <circle cx="160" cy="82" r="8" fill="#8B4A2A"/>
+        <circle cx="160" cy="82" r="4" fill="#F5F0E8"/>
+        <circle cx="160" cy="82" r="14" fill="none" stroke="#8B4A2A" stroke-width="0.5" opacity="0.5"/>
+        <ellipse cx="126" cy="104" rx="10" ry="12" fill="#1E2418" opacity="0.8"/>
+        <ellipse cx="144" cy="99" rx="8" ry="11" fill="#202618" opacity="0.7"/>
+        <ellipse cx="178" cy="102" rx="10" ry="12" fill="#1E2418" opacity="0.8"/>
+        <ellipse cx="196" cy="98" rx="7" ry="10" fill="#202618" opacity="0.6"/>
+        <text x="160" y="68" text-anchor="middle" fill="#7B5A40" font-size="9" font-family="monospace" letter-spacing="2">qb</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">qb</span>
+  <span class="footer-copy">coffee roasters · Brno · Věříme v kávový holismus</span>
+</footer>
+
+<script>
+const MODES  = ['night','dawn','day','dusk'];
+const LABELS = ['noc','úsvit','den','soumrak'];
+const body   = document.body;
+const toggle = document.getElementById('timeToggle');
+const canvas = document.getElementById('heroCanvas');
+const ctx    = canvas.getContext('2d');
+
+function getAutoMode(){
+  const h = new Date().getHours();
+  if(h>=5&&h<8)  return 1;
+  if(h>=8&&h<19) return 2;
+  if(h>=19&&h<22)return 3;
+  return 0;
+}
+
+let modeIdx = getAutoMode();
+
+function applyMode(){
+  MODES.forEach(m=>body.classList.remove(m));
+  body.classList.add(MODES[modeIdx]);
+  toggle.textContent = LABELS[modeIdx];
+}
+applyMode();
+
+toggle.addEventListener('click',()=>{ modeIdx=(modeIdx+1)%4; applyMode(); });
+
+function resize(){
+  canvas.width  = canvas.parentElement.offsetWidth  || window.innerWidth;
+  canvas.height = canvas.parentElement.offsetHeight || window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const stars = Array.from({length:70},()=>({
+  x: Math.random(),
+  y: Math.random()*0.65,
+  r: Math.random()*1.3+0.3,
+  tw: Math.random()*Math.PI*2
+}));
+
+let animT = 0, lastTs = 0;
+
+function draw(ts){
+  const dt = Math.min((ts-lastTs)/1000, 0.05);
+  lastTs = ts;
+  animT += dt;
+
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  const mode = MODES[modeIdx];
+  const isDay = mode==='day';
+
+  const skyColors = {
+    night: ['#09080600','#0E0D09','#12100A'],
+    dawn:  ['#0A090600','#1A1008','#3A2010'],
+    day:   ['#88B8D8','#B8D5EE','#D0E8F5'],
+    dusk:  ['#0E080600','#1C1008','#3A1808']
+  };
+  const [sc0,sc1,sc2] = skyColors[mode];
+  const sg = ctx.createLinearGradient(0,0,0,H*0.78);
+  sg.addColorStop(0, sc0); sg.addColorStop(0.5, sc1); sg.addColorStop(1, sc2);
+  ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
+
+  /* stars */
+  if(!isDay){
+    const sa = mode==='night'?1:mode==='dawn'?0.3:0.45;
+    stars.forEach(s=>{
+      s.tw+=dt*0.9;
+      const a = sa*(0.35+0.65*Math.abs(Math.sin(s.tw)));
+      ctx.beginPath();
+      ctx.arc(s.x*W, s.y*H, s.r, 0, Math.PI*2);
+      ctx.fillStyle=`rgba(210,195,155,${a})`;
+      ctx.fill();
+    });
+  }
+
+  /* moon */
+  if(mode==='night'){
+    const mx=W*0.76, my=H*0.12;
+    ctx.beginPath(); ctx.arc(mx,my,26,0,Math.PI*2);
+    ctx.fillStyle='#D8CEAA'; ctx.fill();
+    ctx.beginPath(); ctx.arc(mx+12,my-4,22,0,Math.PI*2);
+    ctx.fillStyle='#09080A'; ctx.fill();
+  }
+
+  /* dawn sun */
+  if(mode==='dawn'){
+    const sx=W*0.18, sy=H*0.68;
+    const dg=ctx.createRadialGradient(sx,sy,0,sx,sy,150);
+    dg.addColorStop(0,'rgba(240,140,40,0.55)');
+    dg.addColorStop(0.4,'rgba(200,80,20,0.2)');
+    dg.addColorStop(1,'rgba(150,40,0,0)');
+    ctx.fillStyle=dg; ctx.fillRect(0,0,W,H);
+    ctx.beginPath(); ctx.arc(sx,sy,16,Math.PI,0);
+    ctx.fillStyle='#F0A030'; ctx.fill();
+  }
+
+  /* day sun + clouds */
+  if(isDay){
+    const st=animT*0.08;
+    const sx=W*0.76+Math.sin(st)*18, sy=H*0.1+Math.cos(st*0.6)*6;
+    ctx.beginPath(); ctx.arc(sx,sy,34,0,Math.PI*2);
+    ctx.fillStyle='#FFE878'; ctx.fill();
+    ctx.beginPath(); ctx.arc(sx-8,sy+6,28,0,Math.PI*2);
+    ctx.fillStyle='#FFF5B0'; ctx.fill();
+
+    [{bx:0.12,by:0.17,bw:120,bs:0.013},{bx:0.4,by:0.08,bw:90,bs:0.008},{bx:0.63,by:0.2,bw:105,bs:0.011}]
+    .forEach(c=>{
+      const cx=(((c.bx+animT*c.bs)%1.4)-0.2)*W, cy=c.by*H;
+      ctx.fillStyle='rgba(255,255,255,0.9)';
+      ctx.beginPath(); ctx.ellipse(cx,cy,c.bw*0.5,20,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx-c.bw*0.18,cy+10,c.bw*0.28,15,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx+c.bw*0.2,cy+8,c.bw*0.26,13,0,0,Math.PI*2); ctx.fill();
+    });
+  }
+
+  /* dusk */
+  if(mode==='dusk'){
+    const sx=W*0.18, sy=H*0.56;
+    const dg=ctx.createRadialGradient(sx,sy,0,sx,sy,220);
+    dg.addColorStop(0,'rgba(220,80,20,0.6)');
+    dg.addColorStop(0.5,'rgba(160,40,10,0.2)');
+    dg.addColorStop(1,'rgba(100,20,0,0)');
+    ctx.fillStyle=dg; ctx.fillRect(0,0,W,H);
+    ctx.beginPath(); ctx.arc(sx,sy,20,0,Math.PI*2);
+    ctx.fillStyle='#E06020'; ctx.fill();
+    const sg2=ctx.createLinearGradient(0,sy-30,W,sy+40);
+    sg2.addColorStop(0,'rgba(180,60,10,0)');
+    sg2.addColorStop(0.35,'rgba(200,80,20,0.2)');
+    sg2.addColorStop(0.65,'rgba(220,100,30,0.13)');
+    sg2.addColorStop(1,'rgba(180,60,10,0)');
+    ctx.fillStyle=sg2; ctx.fillRect(0,sy-30,W,90);
+  }
+
+  /* ground */
+  const groundY = H*0.76;
+
+  /* river */
+  ctx.fillStyle=isDay?'#6898B8':'#1A1812';
+  ctx.beginPath();
+  ctx.moveTo(0,groundY+H*0.06);
+  ctx.bezierCurveTo(W*0.25,groundY+H*0.04,W*0.75,groundY+H*0.08,W,groundY+H*0.05);
+  ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle=isDay?'rgba(160,200,230,0.35)':'rgba(40,38,30,0.4)';
+  ctx.lineWidth=1;
+  const wOff=animT*15;
+  [0,0.2,0.45,0.7].forEach(t=>{
+    const wx=((t+wOff/(W*0.8))%1.2)*W;
+    ctx.beginPath();
+    ctx.moveTo(wx,groundY+H*0.09);
+    ctx.bezierCurveTo(wx+35,groundY+H*0.07,wx+70,groundY+H*0.11,wx+105,groundY+H*0.09);
+    ctx.stroke();
+  });
+
+  /* buildings helper */
+  function bld(x,y,w,h,rows,cols,jagged){
+    ctx.fillStyle=isDay?'#C8BAA0':'#161410';
+    ctx.fillRect(x,y,w,h);
+    if(jagged){
+      ctx.fillStyle=isDay?'#BAB098':'#1A1712';
+      const seg=w/4;
+      [0,1,2,3].forEach(i=>{
+        if(Math.random()>0.4){
+          ctx.fillRect(x+i*seg,y-5-Math.random()*10,seg*0.7,10);
+        }
+      });
+    }
+    const cellW=Math.floor((w-16)/cols);
+    const startX=x+8;
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const wx=startX+c*(cellW+4);
+        const wy=y+16+r*28;
+        if(wy+14>y+h-8) continue;
+        const lit=Math.random()>0.38;
+        ctx.fillStyle=isDay?(lit?'#EAE0C8':'#A89880'):(lit?'#50391A':'#0A0906');
+        ctx.fillRect(wx,wy,cellW-4,14);
+      }
+    }
+  }
+
+  bld(20,H*0.48,150,H*0.32,4,3,true);
+  bld(W-180,H*0.52,155,H*0.28,3,3,true);
+
+  /* chimney */
+  ctx.fillStyle=isDay?'#B0A088':'#181611';
+  ctx.fillRect(W-90,H*0.36,18,H*0.18);
+  if(!isDay){
+    [0,1,2].forEach(i=>{
+      const sy2=H*0.36-i*14+Math.sin(animT+i)*3;
+      ctx.beginPath();
+      ctx.ellipse(W-81+Math.sin(animT*0.7+i)*4, sy2, 8+i*3, 5+i*2, 0, 0, Math.PI*2);
+      ctx.fillStyle=`rgba(24,22,14,${0.55-i*0.15})`;
+      ctx.fill();
+    });
+  }
+
+  /* main cafe */
+  ctx.fillStyle=isDay?'#C0B098':'#1C1910';
+  ctx.fillRect(W*0.27,H*0.55,W*0.46,H*0.24);
+
+  /* cafe windows */
+  const winYBase=H*0.55+16;
+  [W*0.28+10, W*0.28+70, W*0.28+130, W*0.28+250, W*0.28+310].forEach(wx=>{
+    ctx.fillStyle=isDay?'#DDD0A8':'#4A3515';
+    ctx.fillRect(wx,winYBase,48,32);
+    if(!isDay){
+      ctx.fillStyle='rgba(150,95,30,0.09)';
+      ctx.fillRect(wx-14,winYBase-8,76,48);
+    }
+  });
+
+  /* big central window */
+  ctx.fillStyle=isDay?'#DDD0A8':'#4A3515';
+  ctx.fillRect(W*0.27+W*0.46*0.42, H*0.55+6, W*0.12, 44);
+  if(!isDay){
+    ctx.fillStyle='rgba(150,95,30,0.15)';
+    ctx.fillRect(W*0.27+W*0.46*0.38, H*0.55, W*0.16, 58);
+  }
+
+  /* door */
+  ctx.fillStyle=isDay?'#A89070':'#221C0E';
+  ctx.fillRect(W*0.5-18, groundY-H*0.035, 36, H*0.05);
+
+  /* trees */
+  [{tx:W*0.22,ts:1},{tx:W*0.76,ts:1.1},{tx:W*0.14,ts:0.78},{tx:W*0.84,ts:0.72}]
+  .forEach(({tx,ts})=>{
+    const sw=Math.sin(animT*0.65+ts)*2.5;
+    const ty=groundY-85*ts;
+    ctx.fillStyle=isDay?'#3A5228':'#1A2216';
+    ctx.beginPath(); ctx.ellipse(tx+sw,ty,22*ts,30*ts,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=isDay?'#2E4820':'#141E12';
+    ctx.beginPath(); ctx.ellipse(tx-7+sw,ty+9,14*ts,20*ts,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=isDay?'#3A5228':'#1C2814';
+    ctx.beginPath(); ctx.ellipse(tx+8+sw,ty+6,16*ts,22*ts,0,0,Math.PI*2); ctx.fill();
+  });
+
+  /* warm glow */
+  if(!isDay){
+    const wg=ctx.createRadialGradient(W*0.5,groundY,0,W*0.5,groundY,W*0.25);
+    wg.addColorStop(0,'rgba(100,60,10,0.14)');
+    wg.addColorStop(1,'rgba(80,40,5,0)');
+    ctx.fillStyle=wg; ctx.fillRect(0,0,W,H);
+  }
+
+  /* fog vignette */
+  const fg=ctx.createLinearGradient(0,groundY,0,H);
+  fg.addColorStop(0,isDay?'rgba(190,180,160,0)':'rgba(12,11,8,0)');
+  fg.addColorStop(1,isDay?'rgba(190,180,160,0.45)':'rgba(12,11,8,0.75)');
+  ctx.fillStyle=fg; ctx.fillRect(0,groundY,W,H-groundY);
+
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(ts=>{ lastTs=ts; draw(ts); });
+
+/* steam animation */
+const steams=[document.getElementById('steam1'),document.getElementById('steam2'),document.getElementById('steam3')];
+let sf=0;
+function animSteam(){
+  sf+=0.02;
+  steams.forEach((s,i)=>{ if(!s) return;
+    s.style.transform=`translateY(${-Math.abs(Math.sin(sf+i))*7}px)`;
+    s.style.opacity=0.25+0.35*Math.abs(Math.sin(sf*0.9+i));
+  });
+  requestAnimationFrame(animSteam);
+}
+animSteam();
+
+/* scroll reveal */
+const reveals=document.querySelectorAll('.reveal');
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.12});
+reveals.forEach(r=>io.observe(r));
+</script>
+</body>
+</html>
